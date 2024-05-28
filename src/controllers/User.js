@@ -60,7 +60,53 @@ exports.create = async (req, res) => {
     }
   };
 
+  exports.update = async (req, res) => {
+    if (!req.body) {
+      return res.status(400).send({
+        message: "User content can not be empty",
+      });
+    }
 
-  
+    const id = req.params.userId;
 
+    await UserModel.findByIdAndUpdate(id, req.body, {
+      useFindAndModify: false,
+    })
+      .then((data) => {
+        if (!data) {
+          return res.status(404).send({
+            message: "User not found with id" + id,
+          });
+        } else {
+          res.send({
+            message: "User updated successfully",
+          });
+        }
+      })
+      .catch((err) => {
+        return res.status(500).send({
+          message: "Error updating user with id" + id,
+        });
+      });
+  };
+
+  exports.destroy = async (req, res) => {
+    await UserModel.findByIdAndRemove(req.params.userId)
+      .then((data) => {
+        if (!data) {
+          return res.status(404).send({
+            message: "User not found with id" + req.params.userId,
+          });
+        } else {
+          res.send({
+            message: "User deleted successfully",
+          });
+        }
+      })
+      .catch((err) => {
+        return res.status(500).send({
+          message: "Could not delete user with id" + req.params.userId,
+        });
+      });
+  };
 };
