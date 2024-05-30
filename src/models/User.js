@@ -14,7 +14,7 @@ var schema = mongoose.Schema({
     type: String,
     default: "",
   },
-  phone: string,
+  phone: String,
 });
 
 var user = new mongoose.model("User", schema);
